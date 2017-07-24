@@ -1,0 +1,36 @@
+.abc{
+  border:1px solid black;
+}
+.box{
+  margin-top: 200px;
+}
+
+.logininput{
+  width: 80%;
+  margin-left: 40px;
+}
+
+.well{
+  background-color: #008c72;
+  padding: 0;
+  border-radius: 5px;
+}
+
+.well h4{
+  color: white;
+}
+
+.myimg{
+  margin-left: 130px;
+  margin-bottom: 20px;
+}
+
+.mybtn{
+  background-color: #008c72;
+  color: white;
+}
+
+.mybtn:hover{
+  background-color: #008c72;
+  color: white;
+}
