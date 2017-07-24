@@ -37,7 +37,7 @@
               <td>{{DB::table('products')->where('id','=',$s->product_id)->pluck('name')->first() ? DB::table('products')->where('id','=',$s->product_id)->pluck('name')->first() : 'Not found in DB'}}</td>
               <td>{{$s->quantity}}</td>
               <td>{{$s->total_price}}</td>
-              <td>{{$s->created_at->format('D d M')}}</td>
+              <td>{{$sale->created_at->format('D d M - H:i')}}</td>
             </tr>
           @endforeach
         @endforeach
@@ -90,5 +90,8 @@
     </div>
   </div>
   </div>
+@endsection
+
+@section('script')
 
 @endsection

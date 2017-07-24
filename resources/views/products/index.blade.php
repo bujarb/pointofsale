@@ -43,11 +43,11 @@
             <td>{{$product->price}}</td>
             <td>{{$product->unit}}</td>
             <td>{{$product->suplier}}</td>
-            <td><a href="#" class="btn btn-info btn-sm pull-right">Edit</a></td>
-            <td>
+            <td class="smaller"><a href="#" class="btn btn-info btn-sm btn-block">Edit</a></td>
+            <td class="smaller">
               <form class="delete" action="{{route('product-delete',$product->id)}}" method="post">
                   {{csrf_field()}}
-                  <button class="btn btn-danger btn-sm pull-right">Delete</button>
+                  <button class="btn btn-danger btn-sm btn-block">Delete</button>
               </form>
             </td>
           </tr>
@@ -102,7 +102,7 @@
                   <button class="btn btn-primary btn-block btn-lg" type="submit">Insert</button>
                 </div>
               </form>
-                  <div class="col-md-6">
+                <div class="col-md-6">
                   <button class="btn btn-danger btn-block btn-lg" data-dismiss="modal">Cancel</button>
                 </div>
               </div>

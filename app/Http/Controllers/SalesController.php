@@ -8,6 +8,7 @@ use DB;
 use App\Cart;
 use App\Sale;
 use Carbon\Carbon;
+use Flashy;
 
 class SalesController extends Controller
 {
@@ -42,6 +43,7 @@ class SalesController extends Controller
             $currentCart->quantity++;
             $currentCart->total_price = $currentCart->quantity * $product->price;
             $currentCart->update();
+            Flashy::success('Product succesfully added to the cart');
             return redirect()->back();
           }else{
             $cart = new Cart();
@@ -50,6 +52,7 @@ class SalesController extends Controller
             $cart->quantity = 1;
             $cart->total_price = $cart->quantity * $product->price;
             $cart->save();
+            Flashy::success('Product succesfully added to the cart');
             return redirect()->back();
           }
         }else{
@@ -69,10 +72,14 @@ class SalesController extends Controller
       if($qty == 0){
         $cart->delete();
         return redirect()->back();
+      }else if($product->quantity < $qty){
+        Flashy::error('Sorry. You do not have that quantity in your database!');
+        return redirect()->back();
       }else{
         $cart->quantity = $qty;
         $cart->total_price = $cart->quantity * $product->price;
         $cart->update();
+        Flashy::success('Quantity updated!');
         return redirect()->back();
       }
     }
@@ -95,6 +102,7 @@ class SalesController extends Controller
       $item = Cart::where('id','=',$item_id)->first();
 
       $item->delete();
+      Flashy::error('Product was succesfully deleted from the cart!');
       return redirect()->back();
     }
 
@@ -112,11 +120,12 @@ class SalesController extends Controller
         $product->save();
         $c->delete();
       }
+      Flashy::success('Sale succesfully completed!');
       return redirect()->back();
     }
 
     public function getSalesPage(){
-      $sales = Sale::all();
+      $sales = Sale::orderBy('created_at','DESC')->get();
       $sales->transform(function($order,$key){
         $order->cart = unserialize($order->cart);
         return $order;

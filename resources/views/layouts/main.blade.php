@@ -3,7 +3,9 @@
 @include('partials.header')
   <body>
     @include('partials.nav')
-    <div class="container-fluid fromtop">
+    <div class="container-fluid">
+      @include('flash::message')
+      @include('flashy::message')
       @yield('content')
     </div>
     @include('partials.js')
