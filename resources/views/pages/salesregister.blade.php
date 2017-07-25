@@ -1,8 +1,5 @@
 @extends('layouts.main')
 @section('content')
-  <div class="row fromtop">
-
-  </div>
   <h4><i class="fa fa-barcode"></i> Sales Register</h4>
   <div class="row">
     <div class="col-md-8">
@@ -68,7 +65,7 @@
               <br />
               <td class="col-md-12">
                 <label class="lab"><i class="fa fa-user"></i> Costumer</label>
-                <input type="text" class="form-control" placeholder="Select a costumer name"/>
+                <input type="text" class="form-control" placeholder="Select a costumer name" name="costumer" id="costumer"/>
               </td>
             </tr>
           </tbody>
@@ -82,7 +79,7 @@
                 No. of Items in Cart
               </td>
               <td class="col-sm-6">
-                {{count($mycart)}}
+                {{$items}}
               </td>
             </tr>
             <tr>
@@ -90,7 +87,7 @@
                 Subtotal:
               </td>
               <td class="col-sm-6">
-                USD 0.00
+                Eur {{$subtotal}}
               </td>
             </tr>
             <tr>
@@ -98,21 +95,43 @@
                 Tax:
               </td>
               <td class="col-sm-6">
-                0.00
+                Eur {{$tax}}
               </td>
             </tr>
             <tr>
               <td class="col-sm-6">
               </td>
               <td class="col-sm-6">
-                <h1>USD {{$totalprice}}</h1>
+                <h1>Eur {{$totalprice}}</h1>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-sm-6">
+                <h4>Paid By:</h4>
+              </td>
+              <td class="col-sm-6">
+                <select class="form-control" name="type" id="type">
+                  <option value="cash">Cash</option>
+                  <option value="bank">Bank</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-sm-6">
+                <h4>Owe:</h4>
+              </td>
+              <td class="col-sm-6">
+                <input type="checkbox" name="owe" id="owe" class="form-control"/>
               </td>
             </tr>
           </tbody>
       </table>
       <div class="row">
-        <div class="col-sm-5 pull-right">
-          <input type="submit" value="Payment" class="btn btn-default btn-block"/>
+        <div class="col-sm-6">
+          <input type="text" class="form-control text-center" style="height:45px;" placeholder="Enter cach received..." name="cash" id="cash"/>
+        </div>
+        <div class="col-sm-6">
+          <input type="submit" value="PAY" class="btn btn-default btn-block btnsale" id="btnsale" style="height:45px;"/>
         </div>
       </div>
       </form>
@@ -122,22 +141,30 @@
 
 @section('script')
   <script>
-  $( function() {
-    $( "#search" ).autocomplete({
-      source: 'http://localhost:8000/search'
+  var value = {{$totalprice}}
+    $("#cash").on("keyup", function() {
+      $("#btnsale").prop("disabled", false);
+      if( $("#cash").val() == '' || $("#cash").val() < value) {
+        $("#btnsale").prop("disabled", true);
+      }
     });
-  });
+    
+    $( function() {
+      $( "#search" ).autocomplete({
+        source: 'http://localhost:8000/search'
+      });
+    });
   </script>
-@if(Session::has('flashy_notification.message'))
-<script id="flashy-template" type="text/template">
-    <div class="flashy flashy--{{ Session::get('flashy_notification.type') }}">
+  @if(Session::has('flashy_notification.message'))
+    <script id="flashy-template" type="text/template">
+      <div class="flashy flashy--{{ Session::get('flashy_notification.type') }}">
         <i class="material-icons">speaker_notes</i>
         <a href="#" class="flashy__body" target="_blank"></a>
-    </div>
-</script>
+      </div>
+    </script>
 
-<script>
-    flashy("{{ Session::get('flashy_notification.message') }}", "{{ Session::get('flashy_notification.link') }}");
-</script>
-@endif
+    <script>
+      flashy("{{ Session::get('flashy_notification.message') }}", "{{ Session::get('flashy_notification.link') }}");
+    </script>
+  @endif
 @endsection

@@ -33,9 +33,14 @@ Route::group(['middleware'=>'auth'],function(){
     'as' => 'addToCart'
   ]);
 
-  Route::get('all',[
+  Route::get('sales/all',[
     'uses' => 'SalesController@getSalesPage',
     'as' => 'sales-page'
+  ]);
+
+  Route::get('sales/sold',[
+    'uses' => 'SalesController@getSoldPage',
+    'as' => 'sales-sold'
   ]);
 
   Route::post('sales/qty/{product_id}',[
@@ -56,6 +61,11 @@ Route::group(['middleware'=>'auth'],function(){
   Route::post('sales/register',[
     'uses'=>'SalesController@registerSale',
     'as'=>'sale-register'
+  ]);
+
+  Route::get('sale/{sale_id}',[
+    'uses'=>'SalesController@getSingle',
+    'as'=>'sale-single'
   ]);
 
   Route::get('search',[

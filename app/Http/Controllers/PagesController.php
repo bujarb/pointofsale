@@ -18,10 +18,21 @@ class PagesController extends Controller
 
     public function getSalesRegisterPage(){
       $mycart = Cart::all();
-      $totalprice = 0;
+      $subtotal = 0;
+      $tax = 1.80;
+      $items = 0;
       foreach ($mycart as $cart) {
-        $totalprice += $cart->quantity*$cart->product_price;
+        $subtotal += $cart->quantity*$cart->product_price;
+        $items += $cart->quantity;
       }
-      return view('pages.salesregister',['mycart'=>$mycart,'totalprice'=>$totalprice]);
+      $totalprice = $tax+$subtotal;
+      $data = [
+        'mycart'=>$mycart,
+        'subtotal'=>$subtotal,
+        'tax'=>$tax,
+        'totalprice'=>$totalprice,
+        'items'=>$items
+      ];
+      return view('pages.salesregister')->with($data);
     }
 }

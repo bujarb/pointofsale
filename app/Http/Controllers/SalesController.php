@@ -106,20 +106,31 @@ class SalesController extends Controller
       return redirect()->back();
     }
 
-    public function registerSale(){
+    public function registerSale(Request $request){
       $cart = Cart::all();
-
+      //dd($request);
       $sale = new Sale();
       $sale->cart = serialize($cart);
-      $sale->payment_method = "Cash";
-      $sale->paid = true;
-      $sale->save();
+      $sale->payment_method = $request->type;
+      switch ($request->owe) {
+        case 'on':
+          $sale->paid = false;
+          break;
+        default:
+          $sale->paid = true;
+          break;
+      }
+      $sale->costumer = $request->costumer;
       foreach ($cart as $c) {
         $product = Product::find($c->product_id);
         $product->quantity = $product->quantity - $c->quantity;
         $product->save();
+        $sale->total_price += $c->total_price;
         $c->delete();
       }
+      $data = $request->cash - $sale->total_price;
+      //dd($data);
+      $sale->save();
       Flashy::success('Sale succesfully completed!');
       return redirect()->back();
     }
@@ -131,5 +142,15 @@ class SalesController extends Controller
         return $order;
       });
       return view('sales.index',['sales'=>$sales]);
+    }
+
+    public function getSoldPage(){
+      return view('sales.sold');
+    }
+
+    public function getSingle($sale_id){
+      $sale = Sale::find($sale_id);
+      $sale = unserialize($sale->cart);
+      return view('sales.single',['sale'=>$sale]);
     }
 }

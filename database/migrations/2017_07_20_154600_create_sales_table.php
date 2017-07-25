@@ -18,7 +18,8 @@ class CreateSalesTable extends Migration
             $table->text('cart');
             $table->string('payment_method');
             $table->boolean('paid');
-            $table->string('buyer')->nullable();
+            $table->string('costumer')->nullable();
+            $table->double('total_price');
             $table->timestamps();
         });
     }
