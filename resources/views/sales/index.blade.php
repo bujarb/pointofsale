@@ -33,6 +33,7 @@
           <th>Total Price</th>
           <th>Costumer</th>
           <th>Created At</th>
+          <th>Time</th>
           <th>Delete</th>
         </tr>
       </thead>
@@ -44,7 +45,8 @@
             <td>{{$sale->paid == 1 ? 'Paid' : "Not Paid"}}</td>
             <td>{{$sale->total_price}} Eur</td>
             <td>{{$sale->costumer}}</td>
-            <td>07 12 2017</td>
+            <td>{{$sale->created_at->format('D M')}}</td>
+            <td>{{$sale->time}}</td>
             <td><button class="btn btn-danger btn-block">Delete</button></td>
           </tr>
         @endforeach

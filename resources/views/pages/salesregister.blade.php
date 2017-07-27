@@ -1,5 +1,8 @@
 @extends('layouts.main')
 @section('content')
+  <div class="col-md-2 pull-right">
+    <a href="{{route('report-daily')}}" class="btn btn-info pull-right">Daily Report</a>
+  </div>
   <h4><i class="fa fa-barcode"></i> Sales Register</h4>
   <div class="row">
     <div class="col-md-8">
@@ -124,11 +127,19 @@
                 <input type="checkbox" name="owe" id="owe" class="form-control"/>
               </td>
             </tr>
+            <tr>
+              <td class="col-sm-6">
+                <h4>Bill ?</h4>
+              </td>
+              <td class="col-sm-6">
+                <input type="checkbox" name="bill" id="bill" class="form-control"/>
+              </td>
+            </tr>
           </tbody>
       </table>
       <div class="row">
         <div class="col-sm-6">
-          <input type="text" class="form-control text-center" style="height:45px;" placeholder="Enter cach received..." name="cash" id="cash"/>
+          <input type="text" class="form-control text-center" style="height:45px;" placeholder="Enter cach received..." name="cash" id="cash" autofocus="on" autocomplete="off"/>
         </div>
         <div class="col-sm-6">
           <input type="submit" value="PAY" class="btn btn-default btn-block btnsale" id="btnsale" style="height:45px;"/>
@@ -148,7 +159,7 @@
         $("#btnsale").prop("disabled", true);
       }
     });
-    
+
     $( function() {
       $( "#search" ).autocomplete({
         source: 'http://localhost:8000/search'

@@ -79,6 +79,22 @@ h4{margin-left: 30px;}
   box-shadow: inset #014c35
 }
 
+.card{
+  border-radius: 0;
+  background-color: none;
+  margin: 0;
+}
+
+.left{
+  height: 100px;
+  margin: 0;
+}
+
+.right{
+  height: 100px;
+  margin: 0;
+}
+
 .fromtop{
   height: 50px;
 }
@@ -116,4 +132,4 @@ h4{margin-left: 30px;}
 .modal label{
   color:#ffffff;
 }
-/*End of modal*/
+/*End of modal*

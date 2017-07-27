@@ -9,6 +9,7 @@ use App\Cart;
 use App\Sale;
 use Carbon\Carbon;
 use Flashy;
+use PDF;
 
 class SalesController extends Controller
 {
@@ -39,20 +40,25 @@ class SalesController extends Controller
         //dd($currentCart);
 
         if($product != null){
-          if($currentCart != null){
-            $currentCart->quantity++;
-            $currentCart->total_price = $currentCart->quantity * $product->price;
-            $currentCart->update();
-            Flashy::success('Product succesfully added to the cart');
-            return redirect()->back();
+          if($product->quantity != 0){
+            if($currentCart != null){
+              $currentCart->quantity++;
+              $currentCart->total_price = $currentCart->quantity * $product->price;
+              $currentCart->update();
+              Flashy::success('Product succesfully added to the cart');
+              return redirect()->back();
+            }else{
+              $cart = new Cart();
+              $cart->product_id = $product->id;
+              $cart->product_price = $product->price;
+              $cart->quantity = 1;
+              $cart->total_price = $cart->quantity * $product->price;
+              $cart->save();
+              Flashy::success('Product succesfully added to the cart');
+              return redirect()->back();
+            }
           }else{
-            $cart = new Cart();
-            $cart->product_id = $product->id;
-            $cart->product_price = $product->price;
-            $cart->quantity = 1;
-            $cart->total_price = $cart->quantity * $product->price;
-            $cart->save();
-            Flashy::success('Product succesfully added to the cart');
+            Flashy::error('You do not have this item in stock anymore');
             return redirect()->back();
           }
         }else{
@@ -107,11 +113,17 @@ class SalesController extends Controller
     }
 
     public function registerSale(Request $request){
+      // Get the current cart
       $cart = Cart::all();
-      //dd($request);
+      // Get the hour when this sale was registered
+      $dt = Carbon::now();
+      $time = $dt->hour.':'.$dt->minute.':'.$dt->second;
+
+      // Create a new sale
       $sale = new Sale();
       $sale->cart = serialize($cart);
       $sale->payment_method = $request->type;
+      $sale->time = $time;
       switch ($request->owe) {
         case 'on':
           $sale->paid = false;
@@ -129,14 +141,14 @@ class SalesController extends Controller
         $c->delete();
       }
       $data = $request->cash - $sale->total_price;
-      //dd($data);
       $sale->save();
       Flashy::success('Sale succesfully completed!');
-      return redirect()->back();
+      $sale->time = $time;
+      return redirect()->route('sale-view',$sale->id);
     }
 
     public function getSalesPage(){
-      $sales = Sale::orderBy('created_at','DESC')->get();
+      $sales = Sale::orderBy('time','DESC')->get();
       $sales->transform(function($order,$key){
         $order->cart = unserialize($order->cart);
         return $order;
@@ -152,5 +164,16 @@ class SalesController extends Controller
       $sale = Sale::find($sale_id);
       $sale = unserialize($sale->cart);
       return view('sales.single',['sale'=>$sale]);
+    }
+
+    public function getSaleView($sale_id){
+      $sale = DB::table('sales')->select('*')->where('id','=',$sale_id)->get();
+      $id = $sale_id;
+      $sale->transform(function($sale,$key){
+        $sale->cart = unserialize($sale->cart);
+        return $sale;
+      });
+      $total_price = Sale::where('id','=',$sale_id)->pluck('total_price')->first();
+      return view('sales.view',['sale'=>$sale,'id'=>$sale_id,'total'=>$total_price]);
     }
 }

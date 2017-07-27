@@ -38,6 +38,11 @@ Route::group(['middleware'=>'auth'],function(){
     'as' => 'sales-page'
   ]);
 
+  Route::get('sale/view/{sale_id}',[
+    'uses' => 'SalesController@getSaleView',
+    'as' => 'sale-view'
+  ]);
+
   Route::get('sales/sold',[
     'uses' => 'SalesController@getSoldPage',
     'as' => 'sales-sold'
@@ -86,6 +91,26 @@ Route::group(['middleware'=>'auth'],function(){
   Route::post('products/delete/{product_id}',[
     'uses'=>'ProductController@deleteProduct',
     'as' => 'product-delete'
+  ]);
+
+  Route::get('reports/daily',[
+    'uses'=>'ReportsController@getDailyReport',
+    'as'=>'report-daily'
+  ]);
+
+  Route::get('reports/get/daily',[
+    'uses'=>'ReportsController@dailyReportToPDF',
+    'as'=>'daily-pdf-report'
+  ]);
+
+  Route::get('reports/get/{sale_id}',[
+    'uses'=>'ReportsController@getInvoiceForSale',
+    'as'=>'invoice-for-sale'
+  ]);
+
+  Route::get('reports',[
+    'uses'=>'ReportsController@getReportsIndex',
+    'as'=>'report-index'
   ]);
 });
 

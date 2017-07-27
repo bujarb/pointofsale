@@ -21,7 +21,8 @@ class CreateProductsTable extends Migration
             $table->string('unit')->nullable();
             $table->string('suplier')->nullable();
             $table->integer('quantity');
-            $table->timestamps();
+            $table->date('updated_at');
+            $table->date('created_at');
         });
     }
 

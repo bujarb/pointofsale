@@ -20,7 +20,9 @@ class CreateSalesTable extends Migration
             $table->boolean('paid');
             $table->string('costumer')->nullable();
             $table->double('total_price');
-            $table->timestamps();
+            $table->time('time');
+            $table->date('updated_at');
+            $table->date('created_at');
         });
     }
 
