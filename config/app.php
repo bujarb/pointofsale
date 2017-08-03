@@ -179,6 +179,7 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         MercurySeries\Flashy\FlashyServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
 
     ],
 
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Flashy' => MercurySeries\Flashy\Flashy::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

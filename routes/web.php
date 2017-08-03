@@ -112,6 +112,16 @@ Route::group(['middleware'=>'auth'],function(){
     'uses'=>'ReportsController@getReportsIndex',
     'as'=>'report-index'
   ]);
+
+  Route::get('expenses',[
+    'uses'=>'ExpensesController@getExpensesPage',
+    'as'=>'expenses-index'
+  ]);
+
+  Route::post('expenses/store',[
+    'uses'=>'ExpensesController@store',
+    'as'=>'expense-store'
+  ]);
 });
 
 Auth::routes();
