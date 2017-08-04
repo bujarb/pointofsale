@@ -98,6 +98,11 @@ Route::group(['middleware'=>'auth'],function(){
     'as'=>'report-daily'
   ]);
 
+  Route::post('reports/generate',[
+    'uses'=>'ReportsController@generateReport',
+    'as'=>'report-generate'
+  ]);
+
   Route::get('reports/get/daily',[
     'uses'=>'ReportsController@dailyReportToPDF',
     'as'=>'daily-pdf-report'

@@ -37,4 +37,30 @@ class ReportsController extends Controller
       $pdf = PDF::loadView('pdf.afterreport',['sales'=>$sales,'total'=>$total])->setPaper('a4', 'landscape');
       return $pdf->download('sale.pdf');
     }
+
+    public function generateReport(Request $request){
+      //dd($request);
+      $choice = $request->input('choice');
+
+      switch ($choice) {
+        case 'today':
+          $today = Carbon::now();
+          $today = $today->toDateString('Y-m-d');
+          $reports = Sale::where('created_at','=',$today)->get();
+          //dd($reports);
+          return view('reports.index',['reports'=>$reports]);
+          break;
+        case 'yesterday':
+          $yesterday = Carbon::yesterday();
+          $yesterday = $yesterday->toDateString();
+          $reports = Sale::where('created_at','=',$yesterday)->get();
+          // /dd($reports);
+          return view('reports.index',['reports'=>$reports]);
+          break;
+        case 'thisweek':
+          $today = Carbon::today();
+          $day = $today->day;
+          var_dump($day);
+      }
+    }
 }
