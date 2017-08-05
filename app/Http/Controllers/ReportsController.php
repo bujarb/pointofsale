@@ -54,13 +54,64 @@ class ReportsController extends Controller
           $yesterday = Carbon::yesterday();
           $yesterday = $yesterday->toDateString();
           $reports = Sale::where('created_at','=',$yesterday)->get();
-          // /dd($reports);
-          return view('reports.index',['reports'=>$reports]);
+          $rep = [];
+          foreach ($reports as $report) {
+            $rep = [
+              'date'=>$report->created_at->format('Y-m-d'),
+              'total_price'=>$reports->sum('total_price'),
+              'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
+              'payment_method'=>$report->payment_method,
+            ];
+          }
+          return view('reports.index',['rep'=>$rep]);
           break;
         case 'thisweek':
-          $today = Carbon::today();
-          $day = $today->day;
-          var_dump($day);
+          $date = Carbon::today();
+          $week = $date->weekOfMonth;
+          $dayOfWeek = $date->dayOfWeek;
+
+          $firstDayOfWeek = Carbon::now();
+          $firstDayOfWeek->day = 7-$dayOfWeek;
+          $firstDayOfWeek = $firstDayOfWeek->format('D M d');
+
+          $reports = Sale::whereBetween('created_at',[$firstDayOfWeek,$date])->get();
+          $reports->transform(function($report,$key){
+            $report->cart = unserialize($report->cart);
+            return $report;
+          });
+
+          foreach ($reports as $report) {
+            $rep = [
+              'date'=> $firstDayOfWeek.' - Today',
+              'total_price'=> $reports->sum('total_price'),
+              'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+              'payment_method'=> $report->payment_method,
+              'quantity'=> (int)$report->cart->sum('quantity'),
+            ];
+          }
+          return view('reports.index',['rep'=>$rep]);
+          break;
+      }
+
+      $from = $request->input('datefrom');
+      $to = $request->input('dateto');
+
+      if($from&$to){
+        $reports = Sale::whereBetween('created_at',[$from,$to])->get();
+        $reports->transform(function($report,$key){
+          $report->cart = unserialize($report->cart);
+          return $report;
+        });
+        foreach ($reports as $report) {
+          $rep = [
+            'date'=> $from.' - '.$to,
+            'total_price'=> $reports->sum('total_price'),
+            'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+            'payment_method'=> $report->payment_method,
+            'quantity'=> (int)$report->cart->sum('quantity'),
+          ];
+        }
+        return view('reports.index',['rep'=>$rep]);
       }
     }
 }

@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-  <hr class="myhr"/>
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
       <form action="{{route('report-generate')}}" method="post">
@@ -59,30 +58,22 @@
     </div>
   </div>
   <div class="row">
-    @if (isset($reports))
-        <div class="col-md-12">
+    @if (isset($rep))
+        <div class="col-md-6 col-md-offset-3">
           <table class="table table-striped table-hover table-bordered">
             <thead>
               <tr>
-                <th>Payment Method</th>
-                <th>Paid</th>
+                <th>Date</th>
+                <th>Quantity</th>
                 <th>Total Price</th>
-                <th>Costumer</th>
-                <th>Created At</th>
-                <th>Time</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($reports as $report)
-                <tr>
-                  <td>{{$report->payment_method}}</td>
-                  <td>{{$report->paid == 1 ? 'Paid' : "Not Paid"}}</td>
-                  <td>{{$report->total_price}} Eur</td>
-                  <td>{{$report->costumer}}</td>
-                  <td>{{$report->created_at->format('D M')}}</td>
-                  <td>{{$report->time}}</td>
-                </tr>
-              @endforeach
+              <tr>
+                <td>{{$rep['date']}}</td>
+                <td>{{$rep['quantity']}}</td>
+                <td>{{$rep['total_price']}}</td>
+              </tr>
             </tbody>
           </table>
         </div>
