@@ -7,13 +7,10 @@ use App\Sale;
 use Carbon\Carbon;
 use DB;
 use PDF;
+use Flashy;
 
 class ReportsController extends Controller
 {
-
-    public function getReportsIndex(){
-      return view('reports.index');
-    }
 
     public function getDailyReport(){
       $dt = Carbon::now();
@@ -38,7 +35,16 @@ class ReportsController extends Controller
       return $pdf->download('sale.pdf');
     }
 
-    public function generateReport(Request $request){
+
+    /**
+      * Methods for generating summary reports on sales
+    */
+
+    public function getSummaryReportsIndex(){
+      return view('reports.summary');
+    }
+
+    public function generateSummaryReport(Request $request){
       //dd($request);
       $choice = $request->input('choice');
 
@@ -47,32 +53,56 @@ class ReportsController extends Controller
           $today = Carbon::now();
           $today = $today->toDateString('Y-m-d');
           $reports = Sale::where('created_at','=',$today)->get();
-          //dd($reports);
-          return view('reports.index',['reports'=>$reports]);
+          if(count($reports)>0){
+            $rep = [];
+            foreach ($reports as $report) {
+              $rep = [
+                'type'=>'Today',
+                'date'=>$report->created_at->format('Y-m-d'),
+                'total_price'=>$reports->sum('total_price'),
+                'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
+                'payment_method'=>$report->payment_method,
+              ];
+            }
+            //dd($reports);
+            return view('reports.summary',['rep'=>$rep]);
+          }else{
+            Flashy::info('No sales found today');
+            return redirect()->back();
+          }
           break;
         case 'yesterday':
           $yesterday = Carbon::yesterday();
           $yesterday = $yesterday->toDateString();
           $reports = Sale::where('created_at','=',$yesterday)->get();
-          $rep = [];
-          foreach ($reports as $report) {
-            $rep = [
-              'date'=>$report->created_at->format('Y-m-d'),
-              'total_price'=>$reports->sum('total_price'),
-              'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
-              'payment_method'=>$report->payment_method,
-            ];
+          if(count($reports)>0){
+            $rep = [];
+            foreach ($reports as $report) {
+              $rep = [
+                'type'=>'Yesterday',
+                'date'=>$report->created_at->format('Y-m-d'),
+                'total_price'=>$reports->sum('total_price'),
+                'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
+                'payment_method'=>$report->payment_method,
+              ];
+            }
+            return view('reports.summary',['rep'=>$rep]);
+          }else{
+            Flashy::info('No sales found yesterday!');
+            return redirect()->back();
           }
-          return view('reports.index',['rep'=>$rep]);
           break;
         case 'thisweek':
           $date = Carbon::today();
           $week = $date->weekOfMonth;
           $dayOfWeek = $date->dayOfWeek;
+          $date = $date->toDateString('Y-m-d');
+          //var_dump($date);
 
           $firstDayOfWeek = Carbon::now();
           $firstDayOfWeek->day = 7-$dayOfWeek;
-          $firstDayOfWeek = $firstDayOfWeek->format('D M d');
+          $firstDayOfWeek = $firstDayOfWeek->toDateString('Y-m-d');
+          //var_dump($firstDayOfWeek);
 
           $reports = Sale::whereBetween('created_at',[$firstDayOfWeek,$date])->get();
           $reports->transform(function($report,$key){
@@ -80,16 +110,60 @@ class ReportsController extends Controller
             return $report;
           });
 
-          foreach ($reports as $report) {
-            $rep = [
-              'date'=> $firstDayOfWeek.' - Today',
-              'total_price'=> $reports->sum('total_price'),
-              'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
-              'payment_method'=> $report->payment_method,
-              'quantity'=> (int)$report->cart->sum('quantity'),
-            ];
+          //dd($reports);
+
+          if(count($reports)>0){
+            foreach ($reports as $report) {
+              $rep = [
+                'type'=>'Week',
+                'date'=> $firstDayOfWeek.' - Today',
+                'total_price'=> $reports->sum('total_price'),
+                'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+                'payment_method'=> $report->payment_method,
+                'quantity'=> (int)$report->cart->sum('quantity'),
+              ];
+            }
+            return view('reports.summary',['rep'=>$rep]);
+          }else{
+            Flashy::info('No sales found this week!');
+            return redirect()->back();
           }
-          return view('reports.index',['rep'=>$rep]);
+          break;
+        case 'thismonth':
+          $today = Carbon::today();
+          $today = $today->toDateString('Y-m-d');
+
+          $date = Carbon::today();
+          $date->day = 1;
+          $date = $date->toDateString('Y-m-d');
+
+          $reports = Sale::whereBetween('created_at',[$date,$today])->get();
+          $reports->transform(function($report,$key){
+            $report->cart = unserialize($report->cart);
+            return $report;
+          });
+
+          //dd($reports);
+
+          if(count($reports)>0){
+            foreach ($reports as $report) {
+              $rep = [
+                'type'=>'Week',
+                'date'=> 'This Month',
+                'total_price'=> $reports->sum('total_price'),
+                'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+                'payment_method'=> $report->payment_method,
+                'quantity'=> (int)$report->cart->sum('quantity'),
+              ];
+            }
+            return view('reports.summary',['rep'=>$rep]);
+          }else{
+            Flashy::info('No sales found this month!');
+            return redirect()->back();
+          }
+          break;
+        case 'thisquarter':
+          
           break;
       }
 
@@ -104,6 +178,7 @@ class ReportsController extends Controller
         });
         foreach ($reports as $report) {
           $rep = [
+            'type'=>'Date',
             'date'=> $from.' - '.$to,
             'total_price'=> $reports->sum('total_price'),
             'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
@@ -111,7 +186,11 @@ class ReportsController extends Controller
             'quantity'=> (int)$report->cart->sum('quantity'),
           ];
         }
-        return view('reports.index',['rep'=>$rep]);
+        return view('reports.summary',['rep'=>$rep]);
       }
+    }
+
+    public function generateDetailedReport(Request $request){
+
     }
 }

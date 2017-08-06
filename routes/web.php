@@ -98,11 +98,6 @@ Route::group(['middleware'=>'auth'],function(){
     'as'=>'report-daily'
   ]);
 
-  Route::post('reports/generate',[
-    'uses'=>'ReportsController@generateReport',
-    'as'=>'report-generate'
-  ]);
-
   Route::get('reports/get/daily',[
     'uses'=>'ReportsController@dailyReportToPDF',
     'as'=>'daily-pdf-report'
@@ -113,9 +108,14 @@ Route::group(['middleware'=>'auth'],function(){
     'as'=>'invoice-for-sale'
   ]);
 
-  Route::get('reports',[
-    'uses'=>'ReportsController@getReportsIndex',
-    'as'=>'report-index'
+Route::get('reports/summary',[
+    'uses'=>'ReportsController@getSummaryReportsIndex',
+    'as'=>'report-summary'
+  ]);
+
+  Route::post('reports/summary',[
+    'uses'=>'ReportsController@generateSummaryReport',
+    'as'=>'report-generate'
   ]);
 
   Route::get('expenses',[

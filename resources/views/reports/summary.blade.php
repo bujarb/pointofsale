@@ -16,9 +16,7 @@
             <option value="today">Today</option>
             <option value="yesterday">Yesterday</option>
             <option value="thisweek">This Week</option>
-            <option value="lastweek">Last Week</option>
             <option value="thismonth">This Month</option>
-            <option value="lastmonth">Last Month</option>
             <option value="thisquarter">This Quarter</option>
             <option value="lastquarter">Last Quarter</option>
             <option value="thisyear">This Year</option>
@@ -49,33 +47,33 @@
     </div>
   </div>
   <hr class="myhr"/>
-  <div class="row">
-    <div class="col-md-2">
-      <h4><a href="#">Export CVS</a> <i class="fa fa-file-excel-o" aria-hidden="true"></i></h4>
-    </div>
-    <div class="col-md-2 pull-right">
-      <h4 class="text-right"><a href="{{route('report-index')}}">Clear</a></h4>
-    </div>
-  </div>
-  <div class="row">
+  <div class="row tablerow">
     @if (isset($rep))
         <div class="col-md-6 col-md-offset-3">
-          <table class="table table-striped table-hover table-bordered">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{$rep['date']}}</td>
-                <td>{{$rep['quantity']}}</td>
-                <td>{{$rep['total_price']}}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Report for sales of {{$rep['type']}}</h3>
+            </div>
+            <div class="panel-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Total Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{$rep['date']}}</td>
+                    <td>{{$rep['total_price']}} <strong>Euro</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel-footer">
+
+            </div>
+          </div>
         </div>
     @endif
   </div>
