@@ -35,6 +35,7 @@ Route::group(['middleware'=>'auth'],function(){
 
   Route::get('sales/all',[
     'uses' => 'SalesController@getSalesPage',
+    'middleware' => ['role:admin'],
     'as' => 'sales-page'
   ]);
 
@@ -78,55 +79,80 @@ Route::group(['middleware'=>'auth'],function(){
     'as' => 'search'
   ]);
 
-  Route::get('/products',[
-    'uses' => 'ProductController@getProductsIndex',
-    'as' => 'product-index'
-  ]);
+  Route::group(['middleware'=>'role:admin'],function(){
+    Route::group(['prefix'=>'products'],function(){
+      Route::get('/',[
+        'uses' => 'ProductController@getProductsIndex',
+        'middleware' => ['role:admin'],
+        'as' => 'product-index'
+      ]);
 
-  Route::post('/products/register',[
-    'uses' => 'ProductController@insertProduct',
-    'as' => 'product-store'
-  ]);
+      Route::post('register',[
+        'uses' => 'ProductController@insertProduct',
+        'middleware' => ['role:admin'],
+        'as' => 'product-store'
+      ]);
 
-  Route::post('products/delete/{product_id}',[
-    'uses'=>'ProductController@deleteProduct',
-    'as' => 'product-delete'
-  ]);
+      Route::post('delete/{product_id}',[
+        'uses'=>'ProductController@deleteProduct',
+        'middleware' => ['role:admin'],
+        'as' => 'product-delete'
+      ]);
+    });
+  });
 
-  Route::get('reports/daily',[
-    'uses'=>'ReportsController@getDailyReport',
-    'as'=>'report-daily'
-  ]);
+  Route::group(['middleware'=>'role:admin'],function(){
+    Route::group(['prefix'=>'reports'],function(){
+        Route::get('daily',[
+          'uses'=>'ReportsController@getDailyReport',
+          'as'=>'report-daily'
+        ]);
 
-  Route::get('reports/get/daily',[
-    'uses'=>'ReportsController@dailyReportToPDF',
-    'as'=>'daily-pdf-report'
-  ]);
+        Route::get('get/daily',[
+          'uses'=>'ReportsController@dailyReportToPDF',
+          'as'=>'daily-pdf-report'
+        ]);
 
-  Route::get('reports/get/{sale_id}',[
-    'uses'=>'ReportsController@getInvoiceForSale',
-    'as'=>'invoice-for-sale'
-  ]);
+        Route::get('get/{sale_id}',[
+          'uses'=>'ReportsController@getInvoiceForSale',
+          'as'=>'invoice-for-sale'
+        ]);
 
-Route::get('reports/summary',[
-    'uses'=>'ReportsController@getSummaryReportsIndex',
-    'as'=>'report-summary'
-  ]);
+      Route::get('summary',[
+          'uses'=>'ReportsController@getSummaryReportsIndex',
+          'middleware' => ['role:admin'],
+          'as'=>'report-summary'
+        ]);
 
-  Route::post('reports/summary',[
-    'uses'=>'ReportsController@generateSummaryReport',
-    'as'=>'report-generate'
-  ]);
+        Route::post('summary',[
+          'uses'=>'ReportsController@generateSummaryReport',
+          'as'=>'report-generate'
+        ]);
+    });
+  });
 
-  Route::get('expenses',[
-    'uses'=>'ExpensesController@getExpensesPage',
-    'as'=>'expenses-index'
-  ]);
+  Route::group(['middleware'=>['role:admin|cashier']],function(){
+    Route::group(['prefix'=>'expenses'],function(){
+      Route::get('/',[
+        'uses'=>'ExpensesController@getExpensesPage',
+        'as'=>'expenses-index'
+      ]);
 
-  Route::post('expenses/store',[
-    'uses'=>'ExpensesController@store',
-    'as'=>'expense-store'
-  ]);
+      Route::post('store',[
+        'uses'=>'ExpensesController@store',
+        'as'=>'expense-store'
+      ]);
+    });
+  });
+
+  Route::group(['middleware'=>['role:admin|cashier']],function(){
+    Route::group(['prefix'=>'admin'],function(){
+      Route::get('/',[
+        'uses'=>'AdminController@getIndex',
+        'as'=>'admin-index'
+      ]);
+    });
+  });
 });
 
 Auth::routes();

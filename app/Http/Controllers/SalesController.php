@@ -10,6 +10,7 @@ use App\Sale;
 use Carbon\Carbon;
 use Flashy;
 use PDF;
+use Auth;
 
 class SalesController extends Controller
 {
@@ -141,6 +142,7 @@ class SalesController extends Controller
         $c->delete();
       }
       $data = $request->cash - $sale->total_price;
+      $sale->cashier_id = Auth::user()->id;
       $sale->save();
       Flashy::success('Sale succesfully completed!');
       $sale->time = $time;

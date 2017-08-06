@@ -20,9 +20,12 @@ class CreateSalesTable extends Migration
             $table->boolean('paid');
             $table->string('costumer')->nullable();
             $table->double('total_price');
+            $table->integer('cashier_id')->unsigned();
             $table->time('time');
             $table->date('updated_at');
             $table->date('created_at');
+
+            $table->foreign('cashier_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
