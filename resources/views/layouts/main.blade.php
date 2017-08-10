@@ -3,7 +3,7 @@
 @include('partials.header')
   <body>
     @include('partials.nav')
-    <div class="container-fluid">
+    <div class="container-fluid mycontainer">
       @include('flash::message')
       @include('flashy::message')
       @yield('content')

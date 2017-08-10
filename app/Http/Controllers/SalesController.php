@@ -142,7 +142,8 @@ class SalesController extends Controller
         $c->delete();
       }
       $data = $request->cash - $sale->total_price;
-      $sale->cashier_id = Auth::user()->id;
+      $user = Auth::user();
+      $sale->user()->associate($user);
       $sale->save();
       Flashy::success('Sale succesfully completed!');
       $sale->time = $time;

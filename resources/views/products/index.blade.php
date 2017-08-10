@@ -1,61 +1,66 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="row">
-  <div class="col-md-3">
-    <h4><i class="fa fa-barcode"></i> Products</h4>
-  </div>
-  <div class="col-md-5">
-    <div class="row">
-      <div class="col-md-7">
-        <input type="text" class="form-control"/>
-      </div>
-      <div class="col-md-3">
-        <button class="btn btn-info btn-block">Search</button>
+<div class="row myrow">
+  <div class="row">
+    <div class="col-md-3">
+      <h4><i class="fa fa-barcode"></i> Products</h4>
+    </div>
+    <div class="col-md-5">
+      <div class="row">
+        <div class="col-md-7">
+          <input type="text" class="form-control"/>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block">Search</button>
+        </div>
       </div>
     </div>
+    <div class="col-md-2 pull-right">
+      <button class="btn btn-default" data-toggle="modal" data-target="#myModal">Add a new product</button>
+    </div>
   </div>
-  <div class="col-md-2 pull-right">
-    <button class="btn btn-default" data-toggle="modal" data-target="#myModal">Add a new product</button>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-striped table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>SKU</th>
-          <th>Name</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Unit</th>
-          <th>Suplier</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($products as $key => $product)
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped table-hover table-bordered">
+        <thead>
           <tr>
-            <td>{{$product->sku}}</td>
-            <td>{{$product->name}}</td>
-            <td>{{$product->quantity}}</td>
-            <td>{{$product->price}}</td>
-            <td>{{$product->unit}}</td>
-            <td>{{$product->suplier}}</td>
-            <td class="smaller"><a href="#" class="btn btn-info btn-sm btn-block">Edit</a></td>
-            <td class="smaller">
-              <form class="delete" action="{{route('product-delete',$product->id)}}" method="post">
-                  {{csrf_field()}}
-                  <button class="btn btn-danger btn-sm btn-block">Delete</button>
-              </form>
-            </td>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Unit</th>
+            <th>Suplier</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
-        @endforeach
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @foreach ($products as $key => $product)
+            <tr>
+              <td>{{$product->sku}}</td>
+              <td>{{$product->name}}</td>
+              <td>{{$product->quantity}}</td>
+              <td>{{$product->price}}</td>
+              <td>{{$product->unit}}</td>
+              <td>{{$product->suplier}}</td>
+              <td class="smaller"><a href="#" class="btn btn-info btn-sm btn-block">Edit</a></td>
+              <td class="smaller">
+                <form class="delete" action="{{route('product-delete',$product->id)}}" method="post">
+                    {{csrf_field()}}
+                    <button class="btn btn-danger btn-sm btn-block">Delete</button>
+                </form>
+              </td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+{{$products->links()}}
+
+<!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -112,6 +117,7 @@
     </div>
   </div>
 </div>
+<!-- End of Modal -->
 @endsection
 @section('script')
   <script type="text/javascript">
