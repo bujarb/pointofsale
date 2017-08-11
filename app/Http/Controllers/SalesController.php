@@ -151,7 +151,7 @@ class SalesController extends Controller
     }
 
     public function getSalesPage(){
-      $sales = Sale::orderBy('time','ASC')->get();
+      $sales = Sale::paginate(10);
       $sales->transform(function($order,$key){
         $order->cart = unserialize($order->cart);
         return $order;

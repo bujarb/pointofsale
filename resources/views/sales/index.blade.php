@@ -1,26 +1,28 @@
 @extends('layouts.main')
 
 @section('content')
-  <div class="col-md-3">
-    <h4><i class="fa fa-barcode"></i> Products</h4>
-  </div>
-  <div class="col-md-5">
-    <div class="row">
-      <div class="col-md-7">
-        <input type="text" class="form-control"/>
-      </div>
-      <div class="col-md-3">
-        <button class="btn btn-info btn-block">Search</button>
+<div class="row myrow">
+  <div class="row">
+    <div class="col-md-3">
+      <h4><i class="fa fa-barcode"></i> Products</h4>
+    </div>
+    <div class="col-md-5">
+      <div class="row">
+        <div class="col-md-7">
+          <input type="text" class="form-control"/>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block">Search</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-2 pull-right">
-    <select class="form-control" name="select" id="select">
-      <option value="all">All</option>
-      <option value="paid">Paid</option>
-      <option value="notpaid">Not Paid</option>
-    </select>
-  </div>
+    <div class="col-md-2 pull-right">
+      <select class="form-control" name="select" id="select">
+        <option value="all">All</option>
+        <option value="paid">Paid</option>
+        <option value="notpaid">Not Paid</option>
+      </select>
+    </div>
   </div>
   <div class="row">
   <div class="col-md-12">
@@ -54,6 +56,8 @@
     </table>
   </div>
   </div>
+</div>
+{{$sales->links()}}
 @endsection
 
 @section('script')

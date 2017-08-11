@@ -45,6 +45,11 @@ body{
 
 .myrow{
   min-height: 600px;
+  max-width: 100%;
+}
+
+.logininput{
+  margin-top: 5px;
 }
 
 .navbar-default .navbar-nav > li > a:hover{
