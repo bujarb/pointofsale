@@ -46,9 +46,9 @@
               <td>{{$product->suplier}}</td>
               <td class="smaller"><a href="#" class="btn btn-info btn-sm btn-block">Edit</a></td>
               <td class="smaller">
-                <form class="delete" action="{{route('product-delete',$product->id)}}" method="post">
+                <form action="{{route('product-delete',$product->id)}}" method="post">
                     {{csrf_field()}}
-                    <button class="btn btn-danger btn-sm btn-block">Delete</button>
+                    <button class="btn btn-danger btn-sm btn-block confirm" onclick="return $(".confirm").confirm()">Delete</button>
                 </form>
               </td>
             </tr>
