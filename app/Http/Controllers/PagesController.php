@@ -8,6 +8,7 @@ use DB;
 use Auth;
 use App\Sale;
 use App\User;
+use App\Product;
 use Carbon\Carbon;
 
 class PagesController extends Controller
@@ -19,36 +20,32 @@ class PagesController extends Controller
     public function getHome(){
       $today = Carbon::now();
       $today = $today->toDateString('Y-m-d');
-      /*$sales = Sale::where('user_id','=',Auth::user()->id)->where('created_at','=',$today)->get();
+      $sales = Sale::where('user_id','=',Auth::user()->id)->where('created_at','=',$today)->get();
       $sales->transform(function($sale,$key){
         $sale->cart = unserialize($sale->cart);
         return $sale;
       });
+
+      // Array to store the data which I want to return in the home view
       $data = [
         'total_price'=>0,
         'total_qty'=>0,
+        'total_products'=>0,
       ];
+
+      // Loop through sales to find the total price and total quantity of all sales today
       foreach ($sales as $sale) {
         $data['total_price'] += $sale->total_price;
         foreach ($sale->cart as $cart) {
           $data['total_qty'] += (int)$cart->quantity;
         }
-      }*/
-      $count = 0;
-      $users = User::all();
-      $data = [];
-      for($i=0;$i<count($users);$i++){
-        $sales = Sale::where('user_id','=',$users[$i]['id'])->get();
-        foreach ($sales as $sale) {
-            $data[$count] = [
-              'total'=>$sales->sum('total_price'),
-            ];
-        }
-        $count++;
       }
-      //dd($data);
-      //dd($data);
-      //dd($sales);
+
+      // Loop through products to get the number of all product in database
+      $products = Product::all();
+      $data['total_products'] = count($products);
+
+      // Return the view the data
       return view('pages.home',['data'=>$data]);;
     }
 

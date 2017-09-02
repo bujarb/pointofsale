@@ -206,7 +206,48 @@ class ReportsController extends Controller
           }
           break;
           case 'lastquarter':
-            # code...
+            $date = Carbon::today();
+            $quarter = $date->quarter;
+            $currentQuarter = 0;
+            switch ($quarter) {
+              case 1:
+                $from = Carbon::createFromDate(null, 1, 1)->toDateString();
+                $to = Carbon::createFromDate(null, 3, 31)->toDateString();
+                break;
+              case 2:
+                $from = Carbon::createFromDate(null, 4, 1)->toDateString();
+                $to = Carbon::createFromDate(null, 6, 30)->toDateString();
+                break;
+              case 3:
+                $from = Carbon::createFromDate(null, 7, 1)->toDateString();
+                $to = Carbon::createFromDate(null, 9, 30)->toDateString();
+                $reports = Sale::whereBetween('created_at',[$from,$to])->get();
+                $reports->transform(function($report,$key){
+                  $report->cart = unserialize($report->cart);
+                  return $report;
+                });
+                if(count($reports)>0){
+                  foreach ($reports as $report) {
+                    $rep = [
+                      'type'=>'Week',
+                      'date'=> '3rd quarter',
+                      'total_price'=> $reports->sum('total_price'),
+                      'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+                      'payment_method'=> $report->payment_method,
+                      'quantity'=> (int)$report->cart->sum('quantity'),
+                    ];
+                  }
+                  return view('reports.summary',['rep'=>$rep]);
+                }else{
+                  Flashy::info('No sales found this month!');
+                  return redirect()->back();
+                }
+              break;
+              case 4:
+                $from = Carbon::createFromDate(null, 10, 1)->toDateString();
+                $to = Carbon::createFromDate(null, 12, 31)->toDateString();
+                break;
+            }
             break;
       }
 

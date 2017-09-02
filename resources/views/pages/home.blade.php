@@ -11,7 +11,7 @@
            </div>
            <div class="wrimagecard-topimage_title">
              <h4>Sales Today
-             <div class="pull-right badge">18</div></h4>
+             <div class="pull-right badge">{{$data['total_qty']}}</div></h4>
            </div>
          </a>
        </div>
@@ -24,7 +24,7 @@
            </div>
            <div class="wrimagecard-topimage_title">
              <h4>Products
-             <div class="pull-right badge">18</div></h4>
+             <div class="pull-right badge">{{$data['total_products']}}</div></h4>
            </div>
          </a>
        </div>
@@ -54,30 +54,6 @@
            </div>
          </a>
        </div>
-      </div>
-    </div>
-  </div>
-  <hr class="myhr" />
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="col-md-5 borderright">
-        <h3 class="text-center">Cashiers</h3>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Cashier</th>
-              <th>Cash Made</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              @foreach ($data as $data)
-                <td>{{$data}}</td>
-                <td>{{$data['total']}}</td>
-              @endforeach
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>
