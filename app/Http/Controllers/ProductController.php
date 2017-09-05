@@ -63,6 +63,8 @@ class ProductController extends Controller
                 }
 
                 return Response($output);
+            }else{
+
             }
         }
     }
