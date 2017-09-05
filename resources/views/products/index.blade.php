@@ -9,10 +9,7 @@
     <div class="col-md-5">
       <div class="row">
         <div class="col-md-7">
-          <input type="text" class="form-control" id="search" name="search"/>
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-info btn-block">Search</button>
+          <input type="text" class="form-control" id="search" name="search" placeholder="Search for a product ..."/>
         </div>
       </div>
     </div>

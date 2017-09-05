@@ -57,6 +57,8 @@ class ProductController extends Controller
                     $output .= '<td>' . $value->price . '</td>';
                     $output .= '<td>' . $value->unit . '</td>';
                     $output .= '<td>' . $value->suplier . '</td>';
+                    $output .= '<td class="smaller"><a href="#" class="btn btn-info btn-sm btn-block">Edit</a></td>';
+                    $output .= '<td class="smaller"><a href="#" class="btn btn-danger btn-sm btn-block">Delete</a></td>';
                     $output .= '</tr>';
                 }
 
