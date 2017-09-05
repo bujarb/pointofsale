@@ -9,7 +9,7 @@
     <div class="col-md-5">
       <div class="row">
         <div class="col-md-7">
-          <input type="text" class="form-control"/>
+          <input type="text" class="form-control" id="search" name="search"/>
         </div>
         <div class="col-md-3">
           <button class="btn btn-info btn-block">Search</button>
@@ -124,5 +124,17 @@
     $(".delete").on("submit", function(){
         return confirm("Do you want to delete this item?");
     });
+
+    $('#search').on('keyup',function () {
+        $value=$(this).val();
+        $.ajax({
+          type:'get',
+          url:'{{URL::to('psearch')}}',
+          data: {'search':$value},
+          success:function (data) {
+              $('tbody  ').html(data);
+          }
+        });
+    })
   </script>
 @endsection

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use App\Product;
 use Flashy;
+use DB;
 class ProductController extends Controller
 {
     public function getProductsIndex(){
@@ -39,5 +41,27 @@ class ProductController extends Controller
       $product->delete();
 
       return redirect()->back();
+    }
+
+    public function search(Request $request){
+        if ($request->ajax()){
+            $product = DB::table('products')->where('name','LIKE','%'.$request->search.'%')->get();
+            $output = "";
+
+            if ($product) {
+                foreach ($product as $value) {
+                    $output .= '<tr>';
+                    $output .= '<td>' . $value->sku . '</td>';
+                    $output .= '<td>' . $value->name . '</td>';
+                    $output .= '<td>' . $value->quantity . '</td>';
+                    $output .= '<td>' . $value->price . '</td>';
+                    $output .= '<td>' . $value->unit . '</td>';
+                    $output .= '<td>' . $value->suplier . '</td>';
+                    $output .= '</tr>';
+                }
+
+                return Response($output);
+            }
+        }
     }
 }

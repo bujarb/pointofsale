@@ -20,6 +20,7 @@ Route::group(['middleware'=>'auth'],function(){
 
   Route::get('/home',[
     'uses' => 'PagesController@getHome',
+    'middleware'=>['role:admin'],
     'as' => 'home'
   ]);
 
@@ -74,9 +75,14 @@ Route::group(['middleware'=>'auth'],function(){
     'as'=>'sale-single'
   ]);
 
-  Route::get('search',[
+  /*Route::get('search',[
     'uses' => 'SalesController@search',
     'as' => 'search'
+  ]);*/
+
+  Route::get('psearch',[
+      'uses' => 'ProductController@search',
+      'as' => 'psearch'
   ]);
 
   Route::group(['middleware'=>'role:admin'],function(){
@@ -151,6 +157,10 @@ Route::group(['middleware'=>'auth'],function(){
         'uses'=>'AdminController@getIndex',
         'as'=>'admin-index'
       ]);
+        Route::get('/users',[
+            'uses'=>'AdminController@getAllUsers',
+            'as'=>'users-index'
+        ]);
     });
   });
 });
