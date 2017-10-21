@@ -138,28 +138,63 @@
           </tbody>
       </table>
       <div class="row">
-        <div class="col-sm-6">
-          <input type="text" class="form-control text-center" style="height:45px;" placeholder="Enter cach received..." name="cash" id="cash" autofocus="on" autocomplete="off"/>
-        </div>
-        <div class="col-sm-6">
-          <input type="submit" value="PAY" class="btn btn-default btn-block btnsale" id="btnsale" style="height:45px;"/>
+        <div class="col-md-6">
+          <a href="#" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Pay</a>
         </div>
       </div>
-      </form>
+
     </div>
   </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 col-md-offset-3">
+                <input type="text" name="cash" id="cash" placeholder="Para te gatshme" class="form-control payformcontrol" autocomplete="off">
+              </div>
+              <div class="col-md-6 col-md-offset-3" style="margin-top:30px;">
+                <h3 class="text-center">Kusuri</h3>
+                <div class="row kusurrow">
+                  <h1 class="text-center" id="kusur"></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-md-6">
+                <input type="submit" name="regjistro" id="regjistro" value="Regjistro" class="btn btn-primary btn-block">
+              </div>
+              <div class="col-md-6">
+                <a href="#" class="btn btn-danger btn-block">Anulo</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 @endsection
 
 @section('script')
   <script>
-  var value = {{$totalprice}}
-    $("#cash").on("keyup", function() {
-      $("#btnsale").prop("disabled", false);
-      if( $("#cash").val() == '' || $("#cash").val() < value) {
-        $("#btnsale").prop("disabled", true);
-      }
-    });
+    var inputBox = document.getElementById('cash');
+      inputBox.onkeyup = function(){
+        var total = {{$totalprice}}
+        var kusur = inputBox.value-total;
+        var myvar = inputBox.value;
+        if (myvar < kusur) {
+          document.getElementById('kusur').innerHTML = "Imposible";
+          $('#regjistro').addClass('disabled');
+        }else{
+          document.getElementById('kusur').innerHTML = kusur;
+          $('#regjistro').removeClass('disabled');
+        }
 
+    }
     $( function() {
       $( "#search" ).autocomplete({
         source: 'http://localhost:8000/search'

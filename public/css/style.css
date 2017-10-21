@@ -134,17 +134,21 @@ h4{margin-left: 30px;}
   width: 70px;
 }
 
-/*Modal*/
-.modal-content{
-  background-color: #008c72;
+.payformcontrol{
+  height: 100px;
+  font-size: 30px;
+  text-align: center;
 }
 
-.modal-title{
-  color: #ffffff;
+.kusurrow{
+  height: 100px;
+  color: red;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
-.modal label{
-  color:#ffffff;
+.kusurrow h1{
+  font-size:50px;
 }
 
 .borderright{

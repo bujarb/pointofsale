@@ -12,9 +12,4 @@ class AdminController extends Controller
       return view('admin.index');
     }
 
-    public function getAllUsers(){
-        $users = User::where('id','!=',Auth::user()->id)->get();
-        return view('admin.users.index',['users'=>$users]);
-    }
-
 }
