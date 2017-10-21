@@ -9,6 +9,10 @@ body{
 .abc{
   border:1px solid black;
 }
+
+.mystrong{
+  color: #008c72;
+}
 /* navbar */
 .navbar-default {
     background-color: #008c72;

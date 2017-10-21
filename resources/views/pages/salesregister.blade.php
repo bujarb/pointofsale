@@ -3,7 +3,7 @@
   <div class="col-md-2 pull-right">
     <a href="{{route('report-daily')}}" class="btn btn-info pull-right">Daily Report</a>
   </div>
-  <h4><i class="fa fa-barcode"></i> Sales Register</h4>
+  <h4><i class="fa fa-barcode"></i> Sales Register - <strong class="mystrong">F3</strong></h4>
   <div class="row">
     <div class="col-md-8">
       <div class="row">
@@ -19,8 +19,8 @@
                 <th>SKU</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Qty</th>
-                <th>Discount</th>
+                <th>Qty - <strong class="mystrong">F4</strong></th>
+                <th>Discount - <strong class="mystrong">F6</strong></th>
                 <th>SubTotal</th>
               </tr>
             </thead>
@@ -139,7 +139,7 @@
       </table>
       <div class="row">
         <div class="col-md-6">
-          <a href="#" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Pay</a>
+          <a href="#" class="btn btn-default btn-block" id="modalclick" data-toggle="modal" data-target="#myModal">Pay</a>
         </div>
       </div>
 
@@ -153,7 +153,7 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6 col-md-offset-3">
-                <input type="text" name="cash" id="cash" placeholder="Para te gatshme" class="form-control payformcontrol" autocomplete="off">
+                <input type="text" name="cash" id="cash" placeholder="Para te gatshme" class="form-control payformcontrol" autofocus autocomplete="off">
               </div>
               <div class="col-md-6 col-md-offset-3" style="margin-top:30px;">
                 <h3 class="text-center">Kusuri</h3>
@@ -166,7 +166,7 @@
           <div class="modal-footer">
             <div class="row">
               <div class="col-md-6">
-                <input type="submit" name="regjistro" id="regjistro" value="Regjistro" class="btn btn-primary btn-block">
+                <input type="submit" name="regjistro" id="regjistro" value="Regjistro" class="btn btn-primary btn-block" disabled>
               </div>
               <div class="col-md-6">
                 <a href="#" class="btn btn-danger btn-block">Anulo</a>
@@ -181,20 +181,43 @@
 
 @section('script')
   <script>
-    var inputBox = document.getElementById('cash');
-      inputBox.onkeyup = function(){
-        var total = {{$totalprice}}
-        var kusur = inputBox.value-total;
-        var myvar = inputBox.value;
-        if (myvar < kusur) {
-          document.getElementById('kusur').innerHTML = "Imposible";
-          $('#regjistro').addClass('disabled');
-        }else{
-          document.getElementById('kusur').innerHTML = kusur;
-          $('#regjistro').removeClass('disabled');
-        }
 
-    }
+    $(function(){
+      $('#cash').keyup(function(){
+        var cash = $('#cash').val();
+        var total = {{$totalprice}}
+        var kusur = cash - total;
+        var fixedkusur = kusur.toFixed(2);
+        if (cash < total) {
+          $('#kusur').html("Imposible");
+          $('#regjistro').prop("disabled", true);
+        }else{
+          $('#kusur').html(fixedkusur);
+          $('#regjistro').prop("disabled", false);
+        }
+      });
+    });
+
+    $(document).keydown(function(e){
+      if (e.keyCode == 113) {
+         $("#modalclick").click();
+         $("#cash").show().focus();
+         return false;
+      }
+      if (e.keyCode == 114) {
+         $("#search").show().focus();
+         return false;
+      }
+      if (e.keyCode == 115) {
+         $("#qty").show().focus();
+         return false;
+      }
+      if (e.keyCode == 117) {
+         $("#disc").show().focus();
+         return false;
+      }
+    });
+
     $( function() {
       $( "#search" ).autocomplete({
         source: 'http://localhost:8000/search'
