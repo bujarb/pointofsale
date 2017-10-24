@@ -12,6 +12,8 @@
           <input type="password" class="form-control logininput" placeholder="Password" name="password" id="password"/>
         </div>
       <button class="btn btn-default btn-lg btn-block mybtn">Login</button>
+      <hr>
+      <p class="text-center text-info">Version 1.0</p>
       </form>
   </div>
 </div>

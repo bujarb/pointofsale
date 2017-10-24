@@ -27,7 +27,7 @@
             <tbody>
               @if (count($mycart)>0)
                 @foreach ($mycart as $cart)
-                  <tr id="fade">
+                  <tr id="tablerow">
                     <td>
                       <form action="{{route('delete-item',$cart->id)}}" method="post">
                         {{csrf_field()}}
@@ -139,7 +139,7 @@
       </table>
       <div class="row">
         <div class="col-md-6">
-          <a href="#" class="btn btn-default btn-block" id="modalclick" data-toggle="modal" data-target="#myModal">Pay</a>
+          <a href="#" class="btn btn-default btn-block" id="modalclick" data-toggle="modal" data-target="#myModal">Paguaj</a>
         </div>
       </div>
 
@@ -147,7 +147,7 @@
   </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body">
@@ -169,7 +169,7 @@
                 <input type="submit" name="regjistro" id="regjistro" value="Regjistro" class="btn btn-primary btn-block" disabled>
               </div>
               <div class="col-md-6">
-                <a href="#" class="btn btn-danger btn-block">Anulo</a>
+                <a href="#" class="btn btn-danger btn-block" data-dismiss="modal" aria-label="Close">Anulo</a>
               </div>
             </div>
           </div>
@@ -181,7 +181,7 @@
 
 @section('script')
   <script>
-
+  
     $(function(){
       $('#cash').keyup(function(){
         var cash = $('#cash').val();
@@ -189,39 +189,58 @@
         var kusur = cash - total;
         var fixedkusur = kusur.toFixed(2);
         if (cash < total) {
-          $('#kusur').html("Imposible");
           $('#regjistro').prop("disabled", true);
         }else{
           $('#kusur').html(fixedkusur);
           $('#regjistro').prop("disabled", false);
         }
       });
-    });
 
-    $(document).keydown(function(e){
-      if (e.keyCode == 113) {
-         $("#modalclick").click();
-         $("#cash").show().focus();
-         return false;
-      }
-      if (e.keyCode == 114) {
-         $("#search").show().focus();
-         return false;
-      }
-      if (e.keyCode == 115) {
-         $("#qty").show().focus();
-         return false;
-      }
-      if (e.keyCode == 117) {
-         $("#disc").show().focus();
-         return false;
-      }
-    });
 
-    $( function() {
+      // Disable pay button if cart is empty
+      if ({{count($mycart)}} == 0) {
+        $('#modalclick').prop("disabled",true).html("Ska produkte!");
+      }
+
+
+      // Jquery autocomplete
       $( "#search" ).autocomplete({
         source: 'http://localhost:8000/search'
       });
+
+
+      // Add hot keys
+      $(document).keydown(function(e){
+        if ((e.keyCode == 13) && e.ctrlKey) {
+           $("#modalclick").click();
+           $("#cash").show().focus();
+           $("#cash").select();
+           return false;
+        }
+        if (e.keyCode == 114) {
+           $("#search").show().focus();
+           return false;
+        }
+        if (e.keyCode == 115) {
+           $("#qty").show().focus();
+           $("#qty").select();
+           return false;
+        }
+        if (e.keyCode == 117) {
+           $("#disc").show().focus();
+           $("#disc").select();
+           return false;
+        }
+      });
+
+      //Disable keyboard on modal
+      $('.modal').modal({
+            show: false,
+            keyboard: false,
+            backdrop: 'static'
+      });
     });
+
+
   </script>
 @endsection
