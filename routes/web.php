@@ -36,8 +36,12 @@ Route::group(['middleware'=>'auth'],function(){
 
   Route::get('sales/all',[
     'uses' => 'SalesController@getSalesPage',
-
     'as' => 'sales-page'
+  ]);
+
+  Route::post('sale/delete/{id}',[
+    'uses' => 'SalesController@deleteSale',
+    'as' => 'sale-delete'
   ]);
 
   Route::get('sale/view/{sale_id}',[

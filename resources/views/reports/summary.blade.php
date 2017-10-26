@@ -2,7 +2,7 @@
 
 @section('content')
   <h1 class="text-center">Generate reports for sales</h1>
-  <hr class="myhr"/>
+  <hr/>
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
       <form action="{{route('report-generate')}}" method="post">

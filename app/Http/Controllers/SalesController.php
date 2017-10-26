@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Flashy;
 use PDF;
 use Auth;
+use Illuminate\Support\Facades\Input;
 
 class SalesController extends Controller
 {
@@ -150,13 +151,42 @@ class SalesController extends Controller
       return redirect()->route('sale-view',$sale->id);
     }
 
+    public function deleteSale($id){
+      $sale = Sale::find($id);
+      $sale->delete();
+
+      return redirect()->back();
+    }
+
     public function getSalesPage(){
-      $sales = Sale::paginate(10);
-      $sales->transform(function($order,$key){
-        $order->cart = unserialize($order->cart);
-        return $order;
-      });
-      return view('sales.index',['sales'=>$sales]);
+      $type = Input::get('type');
+
+      switch ($type) {
+        case 'paid':
+            $sales = Sale::where('paid',1)->orderBy('time','desc')->paginate(10);
+            $sales->transform(function($order,$key){
+              $order->cart = unserialize($order->cart);
+              return $order;
+            });
+            return view('sales.index',['sales'=>$sales]);
+          break;
+        case 'notpaid':
+            $sales = Sale::where('paid',0)->orderBy('time','desc')->paginate(10);
+            $sales->transform(function($order,$key){
+              $order->cart = unserialize($order->cart);
+              return $order;
+            });
+            return view('sales.index',['sales'=>$sales]);
+          break;
+        default:
+            $sales = Sale::orderBy('time','desc')->paginate(10);
+            $sales->transform(function($order,$key){
+              $order->cart = unserialize($order->cart);
+              return $order;
+            });
+            return view('sales.index',['sales'=>$sales]);
+          break;
+      }
     }
 
     public function getSoldPage(){

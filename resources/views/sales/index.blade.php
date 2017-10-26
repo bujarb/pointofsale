@@ -4,20 +4,11 @@
 <div class="row myrow">
   <div class="row">
     <div class="col-md-3">
-      <h4><i class="fa fa-barcode"></i> Products</h4>
+      <h4><i class="fa fa-barcode"></i> Sales</h4>
     </div>
-    <div class="col-md-5">
-      <div class="row">
-        <div class="col-md-7">
-          <input type="text" class="form-control"/>
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-info btn-block">Search</button>
-        </div>
-      </div>
-    </div>
+
     <div class="col-md-2 pull-right">
-      <select class="form-control" name="select" id="select">
+      <select class="form-control" name="type" id="type">
         <option value="all">All</option>
         <option value="paid">Paid</option>
         <option value="notpaid">Not Paid</option>
@@ -37,19 +28,30 @@
           <th>Created At</th>
           <th>Time</th>
           <th>Delete</th>
+          <th id="paidth" style="display:none;">Paid</th>
         </tr>
       </thead>
       <tbody>
         @foreach ($sales as $sale)
           <tr>
-            <td><a href="{{route('sale-single',$sale->id)}}" class="btn btn-info btn-block">Expand</a></td>
+            <td><a href="{{route('sale-single',$sale->id)}}" class="btn btn-info btn-block btn-sm">Expand</a></td>
             <td>{{$sale->payment_method}}</td>
             <td>{{$sale->paid == 1 ? 'Paid' : "Not Paid"}}</td>
             <td>{{$sale->total_price}} Eur</td>
             <td>{{$sale->costumer}}</td>
             <td>{{$sale->created_at->format('D M')}}</td>
             <td>{{$sale->time}}</td>
-            <td><button class="btn btn-danger btn-block">Delete</button></td>
+            <td>
+              <form action="{{route('sale-delete',$sale->id)}}" method="post">
+                {{csrf_field()}}
+                <input type="submit" value="Delete" class="btn btn-danger btn-block btn-sm" />
+              </form>
+            </td>
+              @if($sale->paid == 0)
+                <td id="paidtd">
+                  <a href="#" class="btn btn-success btn-block btn-sm">Mark as paid</a>
+                </td>
+              @endif
           </tr>
         @endforeach
       </tbody>
@@ -61,5 +63,18 @@
 @endsection
 
 @section('script')
-
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#type').change(function(){
+      var type = $('#type').find(":selected").val();
+      if (type=="paid") {
+        window.location.search = '?type=paid';
+      }else if(type=="notpaid"){
+        window.location.search = '?type=notpaid';
+      }else{
+        window.location.search = "";
+      }
+    });
+  });
+</script>
 @endsection

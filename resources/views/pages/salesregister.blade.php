@@ -208,7 +208,7 @@
 
       // Jquery autocomplete
       $( "#search" ).autocomplete({
-        source: 'http://localhost:8000/search'
+        source: 'http://127.0.0.1:8000/search'
       });
 
 
