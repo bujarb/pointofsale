@@ -124,9 +124,21 @@ h4{margin-left: 30px;}
   border: 0px solid black;
 }
 
-.col-md-8{
+.borderrightsales{
   border-right: 10px solid #e6e6e6;
   min-height: 500px;
+}
+
+.navbar-default .navbar-nav > .dropdown > a .caret{
+  border-top-color: white;
+  border-bottom-color: white;
+}
+
+.modal-content  {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+    background-color: #eaecef;
 }
 
 .lab{
@@ -147,11 +159,14 @@ h4{margin-left: 30px;}
 .kusurrow{
   height: 100px;
   color: red;
-  border: 1px solid black;
-  border-radius: 5px;
+}
+
+.payformcontrol{
+  border-radius: 0px;
 }
 
 .kusurrow h1{
+  color: #cc2626;
   font-size:50px;
 }
 
@@ -161,8 +176,7 @@ h4{margin-left: 30px;}
 
 
 .myhr{
-  border-bottom: 3px solid black;
-  color: grey;
+  border:2px solid #008c72;
   margin-bottom:10px;
 }
 

@@ -14,3 +14,5 @@
     flashy("{{ Session::get('flashy_notification.message') }}", "{{ Session::get('flashy_notification.link') }}");
   </script>
 @endif
+
+<script src="{{asset('js/myscripts/salesregister.js')}}"></script>

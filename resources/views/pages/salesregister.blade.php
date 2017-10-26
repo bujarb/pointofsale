@@ -5,7 +5,7 @@
   </div>
   <h4><i class="fa fa-barcode"></i> Sales Register - <strong class="mystrong">F3</strong></h4>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 borderrightsales">
       <div class="row">
         <form action="{{route('addToCart')}}" method="post">
           {{csrf_field()}}
@@ -31,7 +31,7 @@
                     <td>
                       <form action="{{route('delete-item',$cart->id)}}" method="post">
                         {{csrf_field()}}
-                        <button class="btn btn-danger btn-sm" id="fade">Remove</button>
+                        <button class="btn btn-danger btn-sm" id="delete">Remove</button>
                       </form>
                     </td>
                     <td>2212431</td>
@@ -156,7 +156,7 @@
                 <input type="text" name="cash" id="cash" placeholder="Para te gatshme" class="form-control payformcontrol" autofocus autocomplete="off">
               </div>
               <div class="col-md-6 col-md-offset-3" style="margin-top:30px;">
-                <h3 class="text-center">Kusuri</h3>
+                <h3 class="text-center" id="kusurtext"></h3>
                 <div class="row kusurrow">
                   <h1 class="text-center" id="kusur"></h1>
                 </div>
@@ -181,7 +181,7 @@
 
 @section('script')
   <script>
-  
+
     $(function(){
       $('#cash').keyup(function(){
         var cash = $('#cash').val();
@@ -189,9 +189,12 @@
         var kusur = cash - total;
         var fixedkusur = kusur.toFixed(2);
         if (cash < total) {
+          $('#kusur').empty();
+          $('#kusurtext').html("Kusur");
           $('#regjistro').prop("disabled", true);
         }else{
-          $('#kusur').html(fixedkusur);
+          $('#kusur').html(fixedkusur+"€ ");
+          $('#kusurtext').html("Kusur");
           $('#regjistro').prop("disabled", false);
         }
       });
@@ -229,6 +232,10 @@
         if (e.keyCode == 117) {
            $("#disc").show().focus();
            $("#disc").select();
+           return false;
+        }
+        if ((e.keyCode == 68) && e.ctrlKey  ) {
+           $("#delete").trigger('click');
            return false;
         }
       });
