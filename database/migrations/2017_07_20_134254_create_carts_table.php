@@ -19,6 +19,7 @@ class CreateCartsTable extends Migration
             $table->double('product_price');
             $table->double('quantity');
             $table->double('total_price');
+            $table->double('discount')->default(0);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

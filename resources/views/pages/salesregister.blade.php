@@ -46,7 +46,7 @@
                     <td>
                       <form action="{{route('update-disc',$cart->product_id)}}" method="post">
                         {{csrf_field()}}
-                        <input type="text" class="form-control input-sm product-input" value="{{$cart->product_price}}" name="disc" id="disc"/>
+                        <input type="text" class="form-control input-sm product-input" value="{{$cart->discount}}" name="disc" id="disc"/>
                       </form>
                     </td>
                     <td>{{($cart->quantity)*($cart->product_price)}}</td>

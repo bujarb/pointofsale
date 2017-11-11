@@ -85,7 +85,7 @@ class SalesController extends Controller
         return redirect()->back();
       }else{
         $cart->quantity = $qty;
-        $cart->total_price = $cart->quantity * $product->price;
+        $cart->total_price = $cart->quantity * $cart->product_price;
         $cart->update();
         Flashy::success('Quantity updated!');
         return redirect()->back();
@@ -100,7 +100,10 @@ class SalesController extends Controller
       if($disc < 0){
         return redirect()->back();
       }else{
-        $cart->product_price = $cart->total_price - $disc;
+        $cart->discount = $disc;
+        $totaldisc = $cart->quantity*$disc;
+        $cart->product_price = $cart->product_price - $disc;
+        $cart->total_price = $cart->quantity * $cart->product_price;
         $cart->update();
         return redirect()->back();
       }

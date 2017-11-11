@@ -52,7 +52,7 @@ class PagesController extends Controller
     public function getSalesRegisterPage(){
       $mycart = Cart::all();
       $subtotal = 0;
-      $tax = 1.80;
+      $tax = 0;
       $items = 0;
       foreach ($mycart as $cart) {
         $subtotal += $cart->quantity*$cart->product_price;
