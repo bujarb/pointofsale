@@ -4,22 +4,24 @@
   <div class="row up">
     <div class="col-md-12">
       <div class="col-md-2">
+        <h4><i class="fa fa-barcode"></i> Products</h4>
+      </div>
+      <div class="col-md-4 col-md-offset-1">
         <input type="text" class="form-control" placeholder="Search expenses ..."/>
       </div>
       <div class="col-md-2 pull-right">
-        <a href="#" class="btn btn-info pull-right" data-toggle="modal" data-target="#myModal">New Expense</a>
+        <a href="#" class="btn btn-info pull-right" data-toggle="modal" data-target="#myModal">New Expense <i class="fa fa-plus-circle"></i></a>
       </div>
     </div>
   </div>
-  <hr class="myhr"/>
+  <hr/>
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
-      <table class="table table-striped">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th>Label</th>
             <th>Amount</th>
-            <th>Tax</th>
             <th>Reason</th>
             <th>Who</th>
             <th>Date</th>
@@ -30,7 +32,6 @@
             <tr>
               <td>{{$expense->label}}</td>
               <td>{{$expense->amount}}</td>
-              <td>{{$expense->tax}}</td>
               <td>{{$expense->reason}}</td>
               <td>{{$expense->who}}</td>
               <td>{{$expense->created_at->format('M d')}}</td>

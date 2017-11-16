@@ -48,209 +48,6 @@ class ReportsController extends Controller
       //dd($request);
       $choice = $request->input('choice');
 
-      switch ($choice) {
-        case 'today':
-          $today = Carbon::now();
-          $today = $today->toDateString('Y-m-d');
-          $reports = Sale::where('created_at','=',$today)->get();
-          if(count($reports)>0){
-            $rep = [];
-            foreach ($reports as $report) {
-              $rep = [
-                'type'=>'Today',
-                'date'=>$report->created_at->format('Y-m-d'),
-                'total_price'=>$reports->sum('total_price'),
-                'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
-                'payment_method'=>$report->payment_method,
-              ];
-            }
-            //dd($reports);
-            return view('reports.summary',['rep'=>$rep]);
-          }else{
-            Flashy::info('No sales found today');
-            return redirect()->back();
-          }
-          break;
-        case 'yesterday':
-          $yesterday = Carbon::yesterday();
-          $yesterday = $yesterday->toDateString();
-          $reports = Sale::where('created_at','=',$yesterday)->get();
-          if(count($reports)>0){
-            $rep = [];
-            foreach ($reports as $report) {
-              $rep = [
-                'type'=>'Yesterday',
-                'date'=>$report->created_at->format('Y-m-d'),
-                'total_price'=>$reports->sum('total_price'),
-                'paid'=>$report->paid == 1 ? 'Paid' : 'Not Paid',
-                'payment_method'=>$report->payment_method,
-              ];
-            }
-            return view('reports.summary',['rep'=>$rep]);
-          }else{
-            Flashy::info('No sales found yesterday!');
-            return redirect()->back();
-          }
-          break;
-        case 'thisweek':
-          $date = Carbon::today();
-          $week = $date->weekOfMonth;
-          $dayOfWeek = $date->dayOfWeek;
-          $date = $date->toDateString('Y-m-d');
-          //var_dump($date);
-
-          $firstDayOfWeek = Carbon::now();
-          $firstDayOfWeek->day = 7-$dayOfWeek;
-          $firstDayOfWeek = $firstDayOfWeek->toDateString('Y-m-d');
-          //var_dump($firstDayOfWeek);
-
-          $reports = Sale::whereBetween('created_at',[$firstDayOfWeek,$date])->get();
-          $reports->transform(function($report,$key){
-            $report->cart = unserialize($report->cart);
-            return $report;
-          });
-
-          //dd($reports);
-
-          if(count($reports)>0){
-            foreach ($reports as $report) {
-              $rep = [
-                'type'=>'Week',
-                'date'=> $firstDayOfWeek.' - Today',
-                'total_price'=> $reports->sum('total_price'),
-                'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
-                'payment_method'=> $report->payment_method,
-                'quantity'=> (int)$report->cart->sum('quantity'),
-              ];
-            }
-            return view('reports.summary',['rep'=>$rep]);
-          }else{
-            Flashy::info('No sales found this week!');
-            return redirect()->back();
-          }
-          break;
-        case 'thismonth':
-          $today = Carbon::today();
-          $today = $today->toDateString('Y-m-d');
-
-          $date = Carbon::today();
-          $date->day = 1;
-          $date = $date->toDateString('Y-m-d');
-
-          $reports = Sale::whereBetween('created_at',[$date,$today])->get();
-          $reports->transform(function($report,$key){
-            $report->cart = unserialize($report->cart);
-            return $report;
-          });
-
-          //dd($reports);
-
-          if(count($reports)>0){
-            foreach ($reports as $report) {
-              $rep = [
-                'type'=>'Week',
-                'date'=> 'This Month',
-                'total_price'=> $reports->sum('total_price'),
-                'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
-                'payment_method'=> $report->payment_method,
-                'quantity'=> (int)$report->cart->sum('quantity'),
-              ];
-            }
-            return view('reports.summary',['rep'=>$rep]);
-          }else{
-            Flashy::info('No sales found this month!');
-            return redirect()->back();
-          }
-          break;
-        case 'thisquarter':
-          $date = Carbon::today();
-          $quarter = $date->quarter;
-          switch ($quarter) {
-            case 1:
-              $from = Carbon::createFromDate(null, 1, 1)->toDateString();
-              $to = Carbon::createFromDate(null, 3, 31)->toDateString();
-              break;
-            case 2:
-              $from = Carbon::createFromDate(null, 4, 1)->toDateString();
-              $to = Carbon::createFromDate(null, 6, 30)->toDateString();
-              break;
-            case 3:
-              $from = Carbon::createFromDate(null, 7, 1)->toDateString();
-              $to = Carbon::createFromDate(null, 9, 30)->toDateString();
-              $reports = Sale::whereBetween('created_at',[$from,$to])->get();
-              $reports->transform(function($report,$key){
-                $report->cart = unserialize($report->cart);
-                return $report;
-              });
-              if(count($reports)>0){
-                foreach ($reports as $report) {
-                  $rep = [
-                    'type'=>'Week',
-                    'date'=> '3rd quarter',
-                    'total_price'=> $reports->sum('total_price'),
-                    'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
-                    'payment_method'=> $report->payment_method,
-                    'quantity'=> (int)$report->cart->sum('quantity'),
-                  ];
-                }
-                return view('reports.summary',['rep'=>$rep]);
-              }else{
-                Flashy::info('No sales found this month!');
-                return redirect()->back();
-              }
-              break;
-            case 4:
-              $from = Carbon::createFromDate(null, 10, 1)->toDateString();
-              $to = Carbon::createFromDate(null, 12, 31)->toDateString();
-              break;
-          }
-          break;
-          case 'lastquarter':
-            $date = Carbon::today();
-            $quarter = $date->quarter;
-            $currentQuarter = 0;
-            switch ($quarter) {
-              case 1:
-                $from = Carbon::createFromDate(null, 1, 1)->toDateString();
-                $to = Carbon::createFromDate(null, 3, 31)->toDateString();
-                break;
-              case 2:
-                $from = Carbon::createFromDate(null, 4, 1)->toDateString();
-                $to = Carbon::createFromDate(null, 6, 30)->toDateString();
-                break;
-              case 3:
-                $from = Carbon::createFromDate(null, 7, 1)->toDateString();
-                $to = Carbon::createFromDate(null, 9, 30)->toDateString();
-                $reports = Sale::whereBetween('created_at',[$from,$to])->get();
-                $reports->transform(function($report,$key){
-                  $report->cart = unserialize($report->cart);
-                  return $report;
-                });
-                if(count($reports)>0){
-                  foreach ($reports as $report) {
-                    $rep = [
-                      'type'=>'Week',
-                      'date'=> '3rd quarter',
-                      'total_price'=> $reports->sum('total_price'),
-                      'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
-                      'payment_method'=> $report->payment_method,
-                      'quantity'=> (int)$report->cart->sum('quantity'),
-                    ];
-                  }
-                  return view('reports.summary',['rep'=>$rep]);
-                }else{
-                  Flashy::info('No sales found this month!');
-                  return redirect()->back();
-                }
-              break;
-              case 4:
-                $from = Carbon::createFromDate(null, 10, 1)->toDateString();
-                $to = Carbon::createFromDate(null, 12, 31)->toDateString();
-                break;
-            }
-            break;
-      }
-
       $from = $request->input('datefrom');
       $to = $request->input('dateto');
 
@@ -271,6 +68,32 @@ class ReportsController extends Controller
           ];
         }
         return view('reports.summary',['rep'=>$rep]);
+      }else{
+        $today = Carbon::now();
+        $today = $today->toDateString();
+        $reports = Sale::where('created_at',$today)->get();
+        if (count($reports)>0) {
+          $reports->transform(function($report,$key){
+            $report->cart = unserialize($report->cart);
+            return $report;
+          });
+          foreach ($reports as $report) {
+            $rep = [
+              'type'=>'Today',
+              'date'=> $today,
+              'total_price'=> $reports->sum('total_price'),
+              'paid'=> $report->paid == 1 ? 'Paid' : 'Not Paid',
+              'payment_method'=> $report->payment_method,
+              'quantity'=> (int)$report->cart->sum('quantity'),
+            ];
+          }
+
+          return view('reports.summary',['rep'=>$rep]);
+
+        }else{
+          Flashy::error("No sales found today");
+          return redirect()->back();
+        }
       }
     }
 

@@ -21,7 +21,6 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="{{route('report-summary')}}">Summary Report</a></li>
-              <li><a href="#">Detailed Sales Report</a></li>
             </ul>
           </li>
 

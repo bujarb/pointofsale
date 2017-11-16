@@ -4,31 +4,12 @@
   <h1 class="text-center">Generate reports for sales</h1>
   <hr/>
   <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-10">
       <form action="{{route('report-generate')}}" method="post">
         {{csrf_field()}}
         <div class="col-md-2">
           <p id="onreports" class="text-center">
-            Select by choice
-          </p>
-        </div>
-        <div class="col-md-2">
-          <select class="form-control" name="choice" id="choice">
-            <option value="">Select your report ...</option>
-            <option value="today">Today</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="thisweek">This Week</option>
-            <option value="thismonth">This Month</option>
-            <option value="thisquarter">This Quarter</option>
-            <option value="lastquarter">Last Quarter</option>
-            <option value="thisyear">This Year</option>
-            <option value="lastyear">Last Year</option>
-            <option value="alltime">All Time</option>
-          </select>
-        </div>
-        <div class="col-sm-2">
-          <p id="onreports" class="text-center">
-            Or select by custom date
+            Select by custom date
           </p>
         </div>
         <div class="col-md-2">

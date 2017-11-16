@@ -10,6 +10,27 @@ body{
   border:1px solid black;
 }
 
+.panel-default .panel-heading{
+  background-color: #008c72;
+}
+
+.panel-default .panel-heading .panel-title{
+  color: #fff;
+}
+
+.panel-default .panel-footer{
+  background-color: #008c72;
+}
+
+.panel-default .panel-footer a{
+  color: #fff;
+}
+
+.btn-green{
+  background-color: #008c72;
+  color: white;
+}
+
 .martop{
   margin: 100px;
 }
